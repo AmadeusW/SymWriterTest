@@ -19,7 +19,13 @@ namespace ConsoleApplication1
             Console.WriteLine("Loading solution");
             var solution = workspace.OpenSolutionAsync(solutionPath).Result;
             var project = solution.Projects.First(n => n.Name.Equals("CSharpCompilerSemanticTest"));
+
             Console.WriteLine("Getting compilation");
+            //Suppress all diagnostics when we're compiling
+            var options = project.CompilationOptions;
+            options = options.WithGeneralDiagnosticOption(ReportDiagnostic.Suppress);
+            project = project.WithCompilationOptions(options);
+
             var compilation = project.GetCompilationAsync().Result;
 
             Console.WriteLine("Emission");
